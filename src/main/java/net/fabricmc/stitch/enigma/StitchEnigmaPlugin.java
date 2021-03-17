@@ -16,16 +16,16 @@
 
 package net.fabricmc.stitch.enigma;
 
-//import cuchaz.enigma.api.EnigmaPlugin;
-//import cuchaz.enigma.api.EnigmaPluginContext;
-//import cuchaz.enigma.api.service.ObfuscationTestService;
+import cuchaz.enigma.api.EnigmaPlugin;
+import cuchaz.enigma.api.EnigmaPluginContext;
+import cuchaz.enigma.api.service.ObfuscationTestService;
 
-public class StitchEnigmaPlugin /* implements EnigmaPlugin */ {
+public class StitchEnigmaPlugin implements EnigmaPlugin {
 
-//	@Override
-//	public void init(EnigmaPluginContext ctx) {
-//		StitchNameProposalService.register(ctx);
-//		ctx.registerService("stitch:intermediary_obfuscation_test", ObfuscationTestService.TYPE, StitchIntermediaryObfuscationTestService::new);
-//	}
+	@Override
+	public void init(EnigmaPluginContext ctx) {
+		StitchNameProposalService.register(ctx);
+		ctx.registerService("stitch:intermediary_obfuscation_test", ObfuscationTestService.TYPE, StitchIntermediaryObfuscationTestService::new);
+	}
 
 }

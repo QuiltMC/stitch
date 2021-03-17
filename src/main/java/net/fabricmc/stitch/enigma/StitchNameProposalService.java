@@ -16,58 +16,58 @@
 
 package net.fabricmc.stitch.enigma;
 
-//import cuchaz.enigma.analysis.index.JarIndex;
-//import cuchaz.enigma.api.EnigmaPluginContext;
-//import cuchaz.enigma.api.service.JarIndexerService;
-//import cuchaz.enigma.api.service.NameProposalService;
-//import cuchaz.enigma.classprovider.ClassProvider;
-//import cuchaz.enigma.translation.representation.entry.FieldEntry;
-//import net.fabricmc.mappings.EntryTriple;
-//import net.fabricmc.stitch.util.FieldNameFinder;
-//import net.fabricmc.stitch.util.NameFinderVisitor;
-//import net.fabricmc.stitch.util.StitchUtil;
-//import org.objectweb.asm.tree.MethodNode;
-//
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
-//import java.util.Optional;
-//import java.util.Set;
+import cuchaz.enigma.analysis.index.JarIndex;
+import cuchaz.enigma.api.EnigmaPluginContext;
+import cuchaz.enigma.api.service.JarIndexerService;
+import cuchaz.enigma.api.service.NameProposalService;
+import cuchaz.enigma.classprovider.ClassProvider;
+import cuchaz.enigma.translation.representation.entry.FieldEntry;
+import net.fabricmc.mappings.EntryTriple;
+import net.fabricmc.stitch.util.FieldNameFinder;
+import net.fabricmc.stitch.util.NameFinderVisitor;
+import net.fabricmc.stitch.util.StitchUtil;
+import org.objectweb.asm.tree.MethodNode;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public class StitchNameProposalService {
-//	private Map<EntryTriple, String> fieldNames;
-//
-//	private StitchNameProposalService(EnigmaPluginContext ctx) {
-//		ctx.registerService("stitch:jar_indexer", JarIndexerService.TYPE, ctx1 -> new JarIndexerService() {
-//			@Override
-//			public void acceptJar(Set<String> classNames, ClassProvider classProvider, JarIndex jarIndex) {
-//
-//				Map<String, Set<String>> enumFields = new HashMap<>();
-//				Map<String, List<MethodNode>> methods = new HashMap<>();
-//
-//				for (String className : classNames) {
-//					classProvider.get(className).accept(new NameFinderVisitor(StitchUtil.ASM_VERSION, enumFields, methods));
-//				}
-//
-//				try {
-//					fieldNames = new FieldNameFinder().findNames(enumFields, methods);
-//				} catch (Exception e) {
-//					throw new RuntimeException(e);
-//				}
-//			}
-//		});
-//
-//		ctx.registerService("stitch:name_proposal", NameProposalService.TYPE, ctx12 -> (obfEntry, remapper) -> {
-//			if(obfEntry instanceof FieldEntry){
-//				FieldEntry fieldEntry = (FieldEntry) obfEntry;
-//				EntryTriple key = new EntryTriple(fieldEntry.getContainingClass().getFullName(), fieldEntry.getName(), fieldEntry.getDesc().toString());
-//				return Optional.ofNullable(fieldNames.get(key));
-//			}
-//			return Optional.empty();
-//		});
-//	}
-//
-//	public static void register(EnigmaPluginContext ctx) {
-//		new StitchNameProposalService(ctx);
-//	}
+	private Map<EntryTriple, String> fieldNames;
+
+	private StitchNameProposalService(EnigmaPluginContext ctx) {
+		ctx.registerService("stitch:jar_indexer", JarIndexerService.TYPE, ctx1 -> new JarIndexerService() {
+			@Override
+			public void acceptJar(Set<String> classNames, ClassProvider classProvider, JarIndex jarIndex) {
+
+				Map<String, Set<String>> enumFields = new HashMap<>();
+				Map<String, List<MethodNode>> methods = new HashMap<>();
+
+				for (String className : classNames) {
+					classProvider.get(className).accept(new NameFinderVisitor(StitchUtil.ASM_VERSION, enumFields, methods));
+				}
+
+				try {
+					fieldNames = new FieldNameFinder().findNames(enumFields, methods);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+			}
+		});
+
+		ctx.registerService("stitch:name_proposal", NameProposalService.TYPE, ctx12 -> (obfEntry, remapper) -> {
+			if(obfEntry instanceof FieldEntry){
+				FieldEntry fieldEntry = (FieldEntry) obfEntry;
+				EntryTriple key = new EntryTriple(fieldEntry.getContainingClass().getFullName(), fieldEntry.getName(), fieldEntry.getDesc().toString());
+				return Optional.ofNullable(fieldNames.get(key));
+			}
+			return Optional.empty();
+		});
+	}
+
+	public static void register(EnigmaPluginContext ctx) {
+		new StitchNameProposalService(ctx);
+	}
 }
