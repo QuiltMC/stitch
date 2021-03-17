@@ -15,16 +15,23 @@ buildscript {
 sourceCompatibility = 1.8
 
 def ENV = System.getenv()
-version = version + "+" + (ENV.BUILD_NUMBER ? ("build." + ENV.BUILD_NUMBER) : "local")
+version = version + (System.getenv("GITHUB_ACTIONS") ? "" : "+local")
 
-group = 'net.fabricmc'
+group = 'org.quiltmc'
 archivesBaseName = project.name.toLowerCase()
 
 repositories {
 	mavenCentral()
+
 	maven {
-		name = 'Fabric'
-		url = 'https://maven.fabricmc.net/'
+		url = "https://maven.quiltmc.org/repository/release/"
+	}
+
+	maven {
+		url = "https://maven.fabricmc.net/"
+		content {
+			includeGroup("net.fabricmc") // I'd like to deprecate procyon, so we don't need to maintain it
+		}
 	}
 }
 
@@ -41,16 +48,17 @@ dependencies {
 	ship 'org.ow2.asm:asm-commons:8.0'
 	ship 'org.ow2.asm:asm-tree:8.0'
 	ship 'org.ow2.asm:asm-util:8.0'
-	ship 'net.fabricmc:tiny-mappings-parser:0.2.2.14'
+	ship 'org.quiltmc:tiny-mappings-parser:0.3.0'
 	implementation 'com.google.guava:guava:28.0-jre'
 	compileOnly group: 'org.checkerframework', name: 'checker-qual', version: '2.5.7'
-	enigma 'cuchaz:enigma:0.20+build.206'
+	enigma 'cuchaz:enigma:0.23.2'
 
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
 
-apply from: 'https://github.com/FabricMC/fabric-docs/raw/master/gradle/license.gradle'
+// TODO: Add license handling so we can build in PRC
+// apply from: 'https://github.com/FabricMC/fabric-docs/raw/master/gradle/license.gradle'
 
 jar {
 	manifest {
@@ -79,6 +87,13 @@ artifacts {
 	archives allJar
 }
 
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = "UTF-8"
+
+	if (JavaVersion.current().isJava9Compatible()) {
+		it.options.release = 8
+	}
+}
 
 publishing {
 	publications {
@@ -90,12 +105,12 @@ publishing {
 
 	// select the repositories you want to publish to
 	repositories {
-		if (project.hasProperty('mavenPass')) {
+		if (ENV.MAVEN_URL) {
 			maven {
-				url = "http://mavenupload.modmuss50.me/"
+				url ENV.MAVEN_URL
 				credentials {
-					username = "buildslave"
-					password = project.getProperty('mavenPass')
+					username ENV.MAVEN_USERNAME
+					password ENV.MAVEN_PASSWORD
 				}
 			}
 		}
