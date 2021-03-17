@@ -27,12 +27,12 @@ repositories {
 		url = "https://maven.quiltmc.org/repository/release/"
 	}
 
-	maven {
-		url = "https://maven.fabricmc.net/"
-		content {
-			includeGroup("net.fabricmc") // I'd like to deprecate procyon, so we don't need to maintain it
-		}
-	}
+//	maven {
+//		url = "https://maven.fabricmc.net/"
+//		content {
+//			includeGroup("net.fabricmc") // I'd like to deprecate procyon, so we don't need to maintain it
+//		}
+//	}
 }
 
 configurations {
@@ -51,7 +51,7 @@ dependencies {
 	ship 'org.quiltmc:tiny-mappings-parser:0.3.0'
 	implementation 'com.google.guava:guava:28.0-jre'
 	compileOnly group: 'org.checkerframework', name: 'checker-qual', version: '2.5.7'
-	enigma 'cuchaz:enigma:0.23.2'
+	// enigma 'cuchaz:enigma:0.23.2'
 
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'

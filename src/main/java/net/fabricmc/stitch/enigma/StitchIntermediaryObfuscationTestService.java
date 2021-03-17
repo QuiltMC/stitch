@@ -16,50 +16,50 @@
 
 package net.fabricmc.stitch.enigma;
 
-import cuchaz.enigma.api.service.EnigmaServiceContext;
-import cuchaz.enigma.api.service.ObfuscationTestService;
-import cuchaz.enigma.translation.representation.entry.ClassEntry;
-import cuchaz.enigma.translation.representation.entry.Entry;
-import cuchaz.enigma.translation.representation.entry.FieldEntry;
-import cuchaz.enigma.translation.representation.entry.MethodEntry;
+//import cuchaz.enigma.api.service.EnigmaServiceContext;
+//import cuchaz.enigma.api.service.ObfuscationTestService;
+//import cuchaz.enigma.translation.representation.entry.ClassEntry;
+//import cuchaz.enigma.translation.representation.entry.Entry;
+//import cuchaz.enigma.translation.representation.entry.FieldEntry;
+//import cuchaz.enigma.translation.representation.entry.MethodEntry;
 
-public class StitchIntermediaryObfuscationTestService implements ObfuscationTestService {
-	private final String prefix, classPrefix, classPackagePrefix, fieldPrefix, methodPrefix;
-
-	public StitchIntermediaryObfuscationTestService(EnigmaServiceContext<ObfuscationTestService> context) {
-		this.prefix = context.getArgument("package").orElse("net/minecraft") + "/";
-		this.classPrefix = context.getArgument("classPrefix").orElse("class_");
-		this.fieldPrefix = context.getArgument("fieldPrefix").orElse("field_");
-		this.methodPrefix = context.getArgument("methodPrefix").orElse("method_");
-
-		this.classPackagePrefix = this.prefix + this.classPrefix;
-	}
-
-	@Override
-	public boolean testDeobfuscated(Entry<?> entry) {
-		if (entry instanceof ClassEntry) {
-			ClassEntry ce = (ClassEntry) entry;
-			String[] components = ce.getFullName().split("\\$");
-
-			// all obfuscated components are, at their outermost, class_
-			String lastComponent = components[components.length - 1];
-			if (lastComponent.startsWith(this.classPrefix) || lastComponent.startsWith(this.classPackagePrefix)) {
-				return false;
-			}
-		} else if (entry instanceof FieldEntry) {
-			if (entry.getName().startsWith(this.fieldPrefix)) {
-				return false;
-			}
-		} else if (entry instanceof MethodEntry) {
-			if (entry.getName().startsWith(this.methodPrefix)) {
-				return false;
-			}
-		} else {
-			// unknown type
-			return false;
-		}
-
-		// known type, not obfuscated
-		return true;
-	}
+public class StitchIntermediaryObfuscationTestService /* implements ObfuscationTestService */ {
+//	private final String prefix, classPrefix, classPackagePrefix, fieldPrefix, methodPrefix;
+//
+//	public StitchIntermediaryObfuscationTestService(EnigmaServiceContext<ObfuscationTestService> context) {
+//		this.prefix = context.getArgument("package").orElse("net/minecraft") + "/";
+//		this.classPrefix = context.getArgument("classPrefix").orElse("class_");
+//		this.fieldPrefix = context.getArgument("fieldPrefix").orElse("field_");
+//		this.methodPrefix = context.getArgument("methodPrefix").orElse("method_");
+//
+//		this.classPackagePrefix = this.prefix + this.classPrefix;
+//	}
+//
+//	@Override
+//	public boolean testDeobfuscated(Entry<?> entry) {
+//		if (entry instanceof ClassEntry) {
+//			ClassEntry ce = (ClassEntry) entry;
+//			String[] components = ce.getFullName().split("\\$");
+//
+//			// all obfuscated components are, at their outermost, class_
+//			String lastComponent = components[components.length - 1];
+//			if (lastComponent.startsWith(this.classPrefix) || lastComponent.startsWith(this.classPackagePrefix)) {
+//				return false;
+//			}
+//		} else if (entry instanceof FieldEntry) {
+//			if (entry.getName().startsWith(this.fieldPrefix)) {
+//				return false;
+//			}
+//		} else if (entry instanceof MethodEntry) {
+//			if (entry.getName().startsWith(this.methodPrefix)) {
+//				return false;
+//			}
+//		} else {
+//			// unknown type
+//			return false;
+//		}
+//
+//		// known type, not obfuscated
+//		return true;
+//	}
 }
