@@ -1,15 +1,8 @@
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'maven-publish'
-
-buildscript {
-	repositories {
-		maven {
-			url "https://plugins.gradle.org/m2/"
-		}
-		jcenter()
-	}
+plugins {
+	id "java"
+	id "java-library"
+	id "maven-publish"
+	id "net.minecrell.licenser" version "0.4.1"
 }
 
 sourceCompatibility = 1.8
@@ -27,6 +20,7 @@ repositories {
 		url = "https://maven.quiltmc.org/repository/release/"
 	}
 
+	// TODO: Republish procyon under our name for enigma
 	maven {
 		url = "https://maven.fabricmc.net/"
 		content {
@@ -44,21 +38,26 @@ configurations {
 }
 
 dependencies {
-	ship 'org.ow2.asm:asm:8.0'
-	ship 'org.ow2.asm:asm-commons:8.0'
-	ship 'org.ow2.asm:asm-tree:8.0'
-	ship 'org.ow2.asm:asm-util:8.0'
-	ship 'org.quiltmc:tiny-mappings-parser:0.3.0'
-	implementation 'com.google.guava:guava:28.0-jre'
-	compileOnly group: 'org.checkerframework', name: 'checker-qual', version: '2.5.7'
-	enigma 'cuchaz:enigma:0.23.2'
+	def asmVersion = "9.1"
 
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+	ship "org.ow2.asm:asm:$asmVersion"
+	ship "org.ow2.asm:asm-commons:$asmVersion"
+	ship "org.ow2.asm:asm-tree:$asmVersion"
+	ship "org.ow2.asm:asm-util:$asmVersion"
+	ship "org.quiltmc:tiny-mappings-parser:0.3.0"
+	implementation "com.google.guava:guava:28.0-jre"
+	compileOnly "org.jetbrains:annotations:20.1.0"
+	enigma "cuchaz:enigma:0.23.2"
+
+	testImplementation "org.junit.jupiter:junit-jupiter-api:5.3.1"
+	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.3.1"
 }
 
-// TODO: Add license handling so we can build in PRC
-// apply from: 'https://github.com/FabricMC/fabric-docs/raw/master/gradle/license.gradle'
+// TODO: Move to spotless
+license {
+	header project.file("HEADER")
+	include "**/*.java"
+}
 
 jar {
 	manifest {
@@ -76,10 +75,10 @@ task allJar(type: Jar) {
 	}
 	manifest {
 		attributes 'Implementation-Title': 'Stitch',
-				'Implementation-Version': version,
+				'Implementation-Version': archiveVersion,
 				'Main-Class': "net.fabricmc.stitch.Main"
 	}
-	classifier = 'all'
+	archiveClassifier = 'all'
 	with jar
 }
 
@@ -93,6 +92,10 @@ tasks.withType(JavaCompile).configureEach {
 	if (JavaVersion.current().isJava9Compatible()) {
 		it.options.release = 8
 	}
+}
+
+java {
+	withSourcesJar()
 }
 
 publishing {
