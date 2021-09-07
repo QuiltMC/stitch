@@ -22,6 +22,7 @@ import cuchaz.enigma.api.service.JarIndexerService;
 import cuchaz.enigma.api.service.NameProposalService;
 import cuchaz.enigma.classprovider.ClassProvider;
 import cuchaz.enigma.translation.representation.AccessFlags;
+import cuchaz.enigma.translation.representation.TypeDescriptor;
 import cuchaz.enigma.translation.representation.entry.FieldEntry;
 import cuchaz.enigma.translation.representation.entry.MethodEntry;
 import net.fabricmc.mappings.EntryTriple;
@@ -74,13 +75,15 @@ public class StitchNameProposalService {
 			if (obfEntry instanceof FieldEntry) {
 				FieldEntry fieldEntry = (FieldEntry) obfEntry;
 				EntryTriple key = new EntryTriple(fieldEntry.getContainingClass().getFullName(), fieldEntry.getName(), fieldEntry.getDesc().toString());
-				if (enumClassChildrenAccess.containsKey(key) && enumClassChildrenAccess.get(key).isSynthetic()) {
+				boolean isClassInstanceArray = fieldEntry.getDesc().isArray() && fieldEntry.getDesc().getArrayType().equals(TypeDescriptor.of(fieldEntry.getContainingClass().getFullName()));
+				if (enumClassChildrenAccess.containsKey(key) && enumClassChildrenAccess.get(key).isSynthetic() && isClassInstanceArray) {
 					return Optional.of("$VALUES");
 				}
 			} else if (obfEntry instanceof MethodEntry) {
 				MethodEntry methodEntry = (MethodEntry) obfEntry;
 				EntryTriple key = new EntryTriple(methodEntry.getContainingClass().getFullName(), methodEntry.getName(), methodEntry.getDesc().toString());
-				if (enumClassChildrenAccess.containsKey(key) && enumClassChildrenAccess.get(key).isSynthetic()) {
+				boolean isClassInstanceArray = methodEntry.getDesc().getReturnDesc().isArray() && methodEntry.getDesc().getReturnDesc().getArrayType().equals(TypeDescriptor.of(methodEntry.getContainingClass().getFullName()));
+				if (enumClassChildrenAccess.containsKey(key) && enumClassChildrenAccess.get(key).isSynthetic() && isClassInstanceArray) {
 					return Optional.of("$values");
 				}
 			}
