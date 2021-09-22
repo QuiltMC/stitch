@@ -39,7 +39,6 @@ import javax.annotation.Nullable;
 import net.fabricmc.stitch.Command;
 import net.fabricmc.stitch.util.Pair;
 
-// TODO: update javadoc
 /**
  * Merges a tiny file with at least 2 columns (namespaces) of mappings, with another tiny
  * file that has the same namespace as the first column and different namespaces as the
