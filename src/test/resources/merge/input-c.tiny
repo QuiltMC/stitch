@@ -4,3 +4,13 @@ c	a	net/minecraft/util/math/MathConstants
 	f	F	b	DEGREES_PER_RADIAN
 	f	F	c	RADIANS_PER_DEGREE
 	f	F	d	EPSILON
+c	c	net/minecraft/util/math/Matrix3f
+	m	(Lc;)V	<init>	<init>
+		p	1		source
+	m	(Ld;)V	<init>	<init>
+		p	1		matrix
+	m	(Lg;)V	<init>	<init>
+		p	1		quaternion
+	m	()V	a	transpose
+	m	(F)V	a	multiply
+		p	1		scalar

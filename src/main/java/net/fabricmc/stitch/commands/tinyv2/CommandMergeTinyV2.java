@@ -201,6 +201,7 @@ public class CommandMergeTinyV2 extends Command {
 				: methods.get(1).getMethodDescriptorInFirstNamespace();
 		if (descriptor == null) throw new RuntimeException("no descriptor for key " + sharedMethodName);
 
+		// TODO: Fix parameters
 		List<TinyMethodParameter> mergedParameters = new ArrayList<>();
 		addParameters(methods, mergedParameters);
 

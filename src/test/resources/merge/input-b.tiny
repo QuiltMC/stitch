@@ -4,3 +4,9 @@ c	a	net/minecraft/unmapped/C_lctoxfsg
 	f	F	b	field_29659
 	f	F	c	field_29660
 	f	F	d	field_29661
+c	c	net/minecraft/class_4581
+	m	(Lc;)V	<init>	<init>
+	m	(Ld;)V	<init>	<init>
+	m	(Lg;)V	<init>	<init>
+	m	()V	a	method_22847
+	m	(F)V	a	method_23274
