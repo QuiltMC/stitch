@@ -41,11 +41,11 @@ import net.fabricmc.stitch.util.Pair;
 
 // TODO: update javadoc
 /**
- * Merges a tiny file with 2 columns (namespaces) of mappings, with another tiny file that has
- * the same namespace as the first column and a different namespace as the second column.
- * The first column of the output will contain the shared namespace,
- * the second column of the output would be the second namespace of input a,
- * and the third column of the output would be the second namespace of input b
+ * Merges a tiny file with at least 2 columns (namespaces) of mappings, with another tiny
+ * file that has the same namespace as the first column and different namespaces as the
+ * other columns. The first column of the output will contain the shared namespace, the
+ * next columns of the output would be the namespaces of all inputs, excluding the first
+ * column namespace
  * <p>
  * Descriptors will remain as-is (using the namespace of the first column)
  * <p>
@@ -67,12 +67,6 @@ import net.fabricmc.stitch.util.Pair;
  * intermediary                 named                                  official
  * c    net/minecraft/class_123      net/minecraft/somePackage/someClass    a
  * m   (Lnet/minecraft/class_124;)V  method_1234 someMethod    a
- * <p>
- * <p>
- * After intermediary-named mappings are obtained,
- * and official-intermediary mappings are obtained and swapped using CommandReorderTinyV2, Loom merges them using this command,
- * and then reorders it to official-intermediary-named using CommandReorderTinyV2 again.
- * This is a convenient way of storing all the mappings in Loom.
  */
 public class CommandMergeTinyV2 extends Command {
 	public CommandMergeTinyV2() {
