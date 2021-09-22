@@ -105,6 +105,10 @@ public class CommandMergeTinyV2 extends Command {
 		tinyFiles.add(tinyFileA);
 
 		TinyHeader headerA = tinyFileA.getHeader();
+		if (headerA.getNamespaces().size() < 2) {
+			throw new IllegalArgumentException(inputs[0] + " must have at least 2 namespaces.");
+		}
+
 		String baseNamespace = headerA.getNamespaces().get(0);
 		for (int i = 1; i < inputs.length; ++i) {
 			Path input = inputs[i];
@@ -112,6 +116,10 @@ public class CommandMergeTinyV2 extends Command {
 			tinyFiles.add(tinyFile);
 			TinyHeader header = tinyFile.getHeader();
 			List<String> namespaces = header.getNamespaces();
+
+			if (header.getNamespaces().size() < 2) {
+				throw new IllegalArgumentException(inputs[i] + " must have at least 2 namespaces.");
+			}
 
 			if (!namespaces.get(0).equals(baseNamespace)) {
 				throw new IllegalArgumentException(String.format("The input tiny files must have the same namespaces as the first column. " +
@@ -269,7 +277,14 @@ public class CommandMergeTinyV2 extends Command {
 	private List<String> mergeNames(String key, List<? extends Mapping> mappings) {
 		List<String> merged = new ArrayList<>();
 		merged.add(key);
-		mappings.forEach(mapping -> merged.add(mappingExists(mapping) ? mapping.getMapping().get(1) : key));
+		mappings.forEach(mapping -> {
+			if (mapping != null) {
+				for (int i = 1; i < mapping.getMapping().size(); ++i) {
+					String m = mapping.getMapping().get(i);
+					merged.add(!m.isEmpty() ? m : key);
+				}
+			}
+		});
 
 		return merged;
 	}

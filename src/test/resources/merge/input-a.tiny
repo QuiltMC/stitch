@@ -1,12 +1,12 @@
-tiny	2	0	official	hashed
-c	a	net/minecraft/unmapped/C_lctoxfsg
-	f	F	a	f_ygxirswm
-	f	F	b	f_ncoyhkkx
-	f	F	c	f_vaqzaaae
-	f	F	d	f_jhuobxwz
-c	c	net/minecraft/unmapped/C_ffukturc
-	m	(Lc;)V	<init>	<init>
-	m	(Ld;)V	<init>	<init>
-	m	(Lg;)V	<init>	<init>
-	m	()V	a	m_jdnetyjq
-	m	(F)V	a	m_asnpwjdg
+tiny	2	0	official	hashed	mojmap
+c	a	net/minecraft/unmapped/C_lctoxfsg	com/mojang/math/Constants
+	f	F	a	f_ygxirswm	PI
+	f	F	b	f_ncoyhkkx	RAD_TO_DEG
+	f	F	c	f_vaqzaaae	DEG_TO_RAD
+	f	F	d	f_jhuobxwz	EPSILON
+c	c	net/minecraft/unmapped/C_ffukturc	com/mojang/math/Matrix3f
+	m	(Lc;)V	<init>	<init>	<init>
+	m	(Ld;)V	<init>	<init>	<init>
+	m	(Lg;)V	<init>	<init>	<init>
+	m	()V	a	m_jdnetyjq	transpose
+	m	(F)V	a	m_asnpwjdg	mul

@@ -1,16 +1,16 @@
-tiny	2	0	official	hashed	intermediary	named
-c	a	net/minecraft/unmapped/C_lctoxfsg	net/minecraft/unmapped/C_lctoxfsg	net/minecraft/util/math/MathConstants
-	f	F	a	f_ygxirswm	field_29658	PI
-	f	F	b	f_ncoyhkkx	field_29659	DEGREES_PER_RADIAN
-	f	F	c	f_vaqzaaae	field_29660	RADIANS_PER_DEGREE
-	f	F	d	f_jhuobxwz	field_29661	EPSILON
-c	c	net/minecraft/unmapped/C_ffukturc	net/minecraft/class_4581	net/minecraft/util/math/Matrix3f
-	m	(Lc;)V	<init>	<init>	<init>	<init>
+tiny	2	0	official	hashed	mojmap	intermediary	named
+c	a	net/minecraft/unmapped/C_lctoxfsg	com/mojang/math/Constants	net/minecraft/class_5973	net/minecraft/util/math/MathConstants
+	f	F	a	f_ygxirswm	PI	field_29658	PI
+	f	F	b	f_ncoyhkkx	RAD_TO_DEG	field_29659	DEGREES_PER_RADIAN
+	f	F	c	f_vaqzaaae	DEG_TO_RAD	field_29660	RADIANS_PER_DEGREE
+	f	F	d	f_jhuobxwz	EPSILON	field_29661	EPSILON
+c	c	net/minecraft/unmapped/C_ffukturc	com/mojang/math/Matrix3f	net/minecraft/class_4581	net/minecraft/util/math/Matrix3f
+	m	(Lc;)V	<init>	<init>	<init>	<init>	<init>
 		p	1		source
-	m	(Ld;)V	<init>	<init>	<init>	<init>
+	m	(Ld;)V	<init>	<init>	<init>	<init>	<init>
 		p	1		matrix
-	m	(Lg;)V	<init>	<init>	<init>	<init>
+	m	(Lg;)V	<init>	<init>	<init>	<init>	<init>
 		p	1		quaternion
-	m	()V	a	m_jdnetyjq	method_22847	transpose
-	m	(F)V	a	m_asnpwjdg	method_23274	multiply
+	m	()V	a	m_jdnetyjq	transpose	method_22847	transpose
+	m	(F)V	a	m_asnpwjdg	mul	method_23274	multiply
 		p	1		scalar
