@@ -1,0 +1,6 @@
+tiny	2	0	official	named
+c	a	net/minecraft/util/math/MathConstants
+	f	F	a	PI
+	f	F	b	DEGREES_PER_RADIAN
+	f	F	c	RADIANS_PER_DEGREE
+	f	F	d	EPSILON

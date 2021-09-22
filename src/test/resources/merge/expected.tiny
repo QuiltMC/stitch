@@ -1,0 +1,6 @@
+tiny	2	0	official	hashed	intermediary	named
+c	a	net/minecraft/unmapped/C_lctoxfsg	net/minecraft/unmapped/C_lctoxfsg	net/minecraft/util/math/MathConstants
+	f	F	a	f_ygxirswm	field_29658	PI
+	f	F	b	f_ncoyhkkx	field_29659	DEGREES_PER_RADIAN
+	f	F	c	f_vaqzaaae	field_29660	RADIANS_PER_DEGREE
+	f	F	d	f_jhuobxwz	field_29661	EPSILON
