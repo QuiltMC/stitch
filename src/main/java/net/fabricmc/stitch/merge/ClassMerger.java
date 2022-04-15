@@ -23,10 +23,18 @@ import org.objectweb.asm.tree.*;
 import java.util.*;
 
 public class ClassMerger {
+    // Fabric
     private static final String SIDE_DESCRIPTOR = "Lnet/fabricmc/api/EnvType;";
     private static final String ITF_DESCRIPTOR = "Lnet/fabricmc/api/EnvironmentInterface;";
     private static final String ITF_LIST_DESCRIPTOR = "Lnet/fabricmc/api/EnvironmentInterfaces;";
     private static final String SIDED_DESCRIPTOR = "Lnet/fabricmc/api/Environment;";
+    // Quilt
+    private static final String QUILT_CLIENT_DESC = "Lorg/quiltmc/loader/api/minecraft/ClientOnly;";
+    private static final String QUILT_SERVER_DESC = "Lorg/quiltmc/loader/api/minecraft/DedicatedServerOnly;";
+    private static final String QUILT_CLIENT_ITF_DESC = "Lorg/quiltmc/loader/api/minecraft/ClientOnlyInterface;";
+    private static final String QUILT_CLIENT_ITF_LIST_DESC = "Lorg/quiltmc/loader/api/minecraft/ClientOnlyInterfaces;";
+    private static final String QUILT_SERVER_ITF_DESC = "Lorg/quiltmc/loader/api/minecraft/DedicatedServerOnlyInterface;";
+    private static final String QUILT_SERVER_ITF_LIST_DESC = "Lorg/quiltmc/loader/api/minecraft/DedicatedServerOnlyInterfaces;";
 
     private abstract class Merger<T> {
         private final Map<String, T> entriesClient, entriesServer;
@@ -89,22 +97,39 @@ public class ClassMerger {
 
     public static class SidedClassVisitor extends ClassVisitor {
         private final String side;
+        private boolean useQuilt = true;
 
         public SidedClassVisitor(int api, ClassVisitor cv, String side) {
             super(api, cv);
             this.side = side;
         }
 
+        public SidedClassVisitor setUseQuiltAnnotations(boolean use) {
+            useQuilt = use;
+            return this;
+        }
+
         @Override
         public void visitEnd() {
-            AnnotationVisitor av = cv.visitAnnotation(SIDED_DESCRIPTOR, true);
-            visitSideAnnotation(av, side);
+            if (useQuilt) {
+                cv.visitAnnotation("CLIENT".equals(side) ? QUILT_CLIENT_DESC : QUILT_SERVER_DESC, true);
+            } else {
+                AnnotationVisitor av = cv.visitAnnotation(SIDED_DESCRIPTOR, true);
+                visitSideAnnotation(av, side);
+            }
             super.visitEnd();
         }
     }
 
+    private boolean useQuilt = true;
+
     public ClassMerger() {
 
+    }
+
+    public ClassMerger setUseQuiltAnnotations(boolean use) {
+        useQuilt = use;
+        return this;
     }
 
     public byte[] merge(byte[] classClient, byte[] classServer) {
@@ -168,7 +193,36 @@ public class ClassMerger {
             }
         }
 
-        if (!clientItfs.isEmpty() || !serverItfs.isEmpty()) {
+        if (useQuilt) {
+            if (!clientItfs.isEmpty()) {
+                if (clientItfs.size() == 1) {
+                    AnnotationVisitor envItf = nodeOut.visitAnnotation(QUILT_CLIENT_ITF_DESC, false);
+                    envItf.visit("value", Type.getType("L" + clientItfs.get(0) + ";"));
+                } else {
+                    AnnotationVisitor envInterfaces = nodeOut.visitAnnotation(QUILT_CLIENT_ITF_LIST_DESC, false);
+                    AnnotationVisitor eiArray = envInterfaces.visitArray("value");
+                    for (String itf : clientItfs) {
+                        AnnotationVisitor envItf = eiArray.visitAnnotation(null, QUILT_CLIENT_ITF_DESC);
+                        envItf.visit("value", Type.getType("L" + itf + ";"));
+                    }
+                }
+            }
+
+            if (!serverItfs.isEmpty()) {
+                if (serverItfs.size() == 1) {
+                    AnnotationVisitor envItf = nodeOut.visitAnnotation(QUILT_SERVER_ITF_DESC, false);
+                    envItf.visit("value", Type.getType("L" + serverItfs.get(0) + ";"));
+                } else {
+                    AnnotationVisitor envInterfaces = nodeOut.visitAnnotation(QUILT_SERVER_ITF_LIST_DESC, false);
+                    AnnotationVisitor eiArray = envInterfaces.visitArray("value");
+                    for (String itf : serverItfs) {
+                        AnnotationVisitor envItf = eiArray.visitAnnotation(null, QUILT_SERVER_ITF_DESC);
+                        envItf.visit("value", Type.getType("L" + itf + ";"));
+                    }
+                }
+            }
+        
+        } else if (!clientItfs.isEmpty() || !serverItfs.isEmpty()) {
             AnnotationVisitor envInterfaces = nodeOut.visitAnnotation(ITF_LIST_DESCRIPTOR, false);
             AnnotationVisitor eiArray = envInterfaces.visitArray("value");
 
@@ -201,8 +255,12 @@ public class ClassMerger {
 
             @Override
             public void applySide(FieldNode entry, String side) {
-                AnnotationVisitor av = entry.visitAnnotation(SIDED_DESCRIPTOR, false);
-                visitSideAnnotation(av, side);
+                if (useQuilt) {
+                    entry.visitAnnotation("CLIENT".equals(side) ? QUILT_CLIENT_DESC : QUILT_SERVER_DESC, false);
+                } else {
+                    AnnotationVisitor av = entry.visitAnnotation(SIDED_DESCRIPTOR, false);
+                    visitSideAnnotation(av, side);
+                }
             }
         }.merge(nodeOut.fields);
 
@@ -214,8 +272,12 @@ public class ClassMerger {
 
             @Override
             public void applySide(MethodNode entry, String side) {
-                AnnotationVisitor av = entry.visitAnnotation(SIDED_DESCRIPTOR, false);
-                visitSideAnnotation(av, side);
+                if (useQuilt) {
+                    entry.visitAnnotation("CLIENT".equals(side) ? QUILT_CLIENT_DESC : QUILT_SERVER_DESC, false);
+                } else {
+                    AnnotationVisitor av = entry.visitAnnotation(SIDED_DESCRIPTOR, false);
+                    visitSideAnnotation(av, side);
+                }
             }
         }.merge(nodeOut.methods);
 

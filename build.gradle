@@ -2,6 +2,7 @@ plugins {
 	id "java"
 	id "java-library"
 	id "maven-publish"
+	id "eclipse"
 	id "net.minecrell.licenser" version "0.4.1"
 }
 
