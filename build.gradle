@@ -81,7 +81,6 @@ task allJar(type: Jar) {
 				'Main-Class': "net.fabricmc.stitch.Main"
 	}
 	archiveClassifier = 'all'
-	duplicatesStrategy = 'exclude'
 	with jar
 }
 
