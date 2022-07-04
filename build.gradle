@@ -26,6 +26,7 @@ repositories {
 		url = "https://maven.fabricmc.net/"
 		content {
 			includeGroup("net.fabricmc") // I'd like to deprecate procyon, so we don't need to maintain it
+			includeGroup("cuchaz")
 		}
 	}
 }
@@ -80,6 +81,7 @@ task allJar(type: Jar) {
 				'Main-Class': "net.fabricmc.stitch.Main"
 	}
 	archiveClassifier = 'all'
+	duplicatesStrategy = 'exclude'
 	with jar
 }
 
