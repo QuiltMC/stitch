@@ -47,13 +47,16 @@ public class JarMerger implements AutoCloseable {
         }
     }
 
-    private static final ClassMerger CLASS_MERGER = new ClassMerger();
+    private static final ClassMerger CLASS_MERGER_QUILT = new ClassMerger().setUseQuiltAnnotations(true);
+    private static final ClassMerger CLASS_MERGER_FABRIC = new ClassMerger().setUseQuiltAnnotations(false);
+
     private final StitchUtil.FileSystemDelegate inputClientFs, inputServerFs, outputFs;
     private final Path inputClient, inputServer;
     private final Map<String, Entry> entriesClient, entriesServer;
     private final Set<String> entriesAll;
     private boolean removeSnowmen = false;
     private boolean offsetSyntheticsParams = false;
+    private boolean useQuiltAnnotations = true;
 
     public JarMerger(File inputClient, File inputServer, File output) throws IOException {
         if (output.exists()) {
@@ -77,6 +80,10 @@ public class JarMerger implements AutoCloseable {
 
     public void enableSyntheticParamsOffset() {
         offsetSyntheticsParams = true;
+    }
+
+    public void setUseQuiltAnnotations(boolean use) {
+        useQuiltAnnotations = use;
     }
 
     @Override
@@ -170,7 +177,8 @@ public class JarMerger implements AutoCloseable {
                     result = entry1;
                 } else {
                     if (isClass) {
-                        result = new Entry(entry1.path, entry1.metadata, CLASS_MERGER.merge(entry1.data, entry2.data));
+                        ClassMerger classMerger = useQuiltAnnotations ? CLASS_MERGER_QUILT : CLASS_MERGER_FABRIC;
+                        result = new Entry(entry1.path, entry1.metadata, classMerger.merge(entry1.data, entry2.data));
                     } else {
                         // FIXME: More heuristics?
                         result = entry1;
@@ -195,7 +203,8 @@ public class JarMerger implements AutoCloseable {
                     ClassVisitor visitor = writer;
 
                     if (side != null) {
-                        visitor = new ClassMerger.SidedClassVisitor(StitchUtil.ASM_VERSION, visitor, side);
+                        visitor = new ClassMerger.SidedClassVisitor(StitchUtil.ASM_VERSION, visitor, side)
+                            .setUseQuiltAnnotations(useQuiltAnnotations);
                     }
 
                     if (removeSnowmen) {
