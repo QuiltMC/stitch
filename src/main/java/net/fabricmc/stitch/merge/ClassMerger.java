@@ -31,10 +31,6 @@ public class ClassMerger {
     // Quilt
     private static final String QUILT_CLIENT_DESC = "Lorg/quiltmc/loader/api/minecraft/ClientOnly;";
     private static final String QUILT_SERVER_DESC = "Lorg/quiltmc/loader/api/minecraft/DedicatedServerOnly;";
-    private static final String QUILT_CLIENT_ITF_DESC = "Lorg/quiltmc/loader/api/minecraft/ClientOnlyInterface;";
-    private static final String QUILT_CLIENT_ITF_LIST_DESC = "Lorg/quiltmc/loader/api/minecraft/ClientOnlyInterfaces;";
-    private static final String QUILT_SERVER_ITF_DESC = "Lorg/quiltmc/loader/api/minecraft/DedicatedServerOnlyInterface;";
-    private static final String QUILT_SERVER_ITF_LIST_DESC = "Lorg/quiltmc/loader/api/minecraft/DedicatedServerOnlyInterfaces;";
 
     private abstract class Merger<T> {
         private final Map<String, T> entriesClient, entriesServer;
@@ -195,31 +191,17 @@ public class ClassMerger {
 
         if (useQuilt) {
             if (!clientItfs.isEmpty()) {
-                if (clientItfs.size() == 1) {
-                    AnnotationVisitor envItf = nodeOut.visitAnnotation(QUILT_CLIENT_ITF_DESC, false);
-                    envItf.visit("value", Type.getType("L" + clientItfs.get(0) + ";"));
-                } else {
-                    AnnotationVisitor envInterfaces = nodeOut.visitAnnotation(QUILT_CLIENT_ITF_LIST_DESC, false);
-                    AnnotationVisitor eiArray = envInterfaces.visitArray("value");
-                    for (String itf : clientItfs) {
-                        AnnotationVisitor envItf = eiArray.visitAnnotation(null, QUILT_CLIENT_ITF_DESC);
-                        envItf.visit("value", Type.getType("L" + itf + ";"));
-                    }
-                }
+            	for (String itf : clientItfs) {
+            		int ref = TypeReference.CLASS_EXTENDS | nodeOut.interfaces.indexOf(itf) << 8;
+            		nodeOut.visitTypeAnnotation(ref, null, QUILT_CLIENT_DESC, false);
+            	}
             }
 
             if (!serverItfs.isEmpty()) {
-                if (serverItfs.size() == 1) {
-                    AnnotationVisitor envItf = nodeOut.visitAnnotation(QUILT_SERVER_ITF_DESC, false);
-                    envItf.visit("value", Type.getType("L" + serverItfs.get(0) + ";"));
-                } else {
-                    AnnotationVisitor envInterfaces = nodeOut.visitAnnotation(QUILT_SERVER_ITF_LIST_DESC, false);
-                    AnnotationVisitor eiArray = envInterfaces.visitArray("value");
-                    for (String itf : serverItfs) {
-                        AnnotationVisitor envItf = eiArray.visitAnnotation(null, QUILT_SERVER_ITF_DESC);
-                        envItf.visit("value", Type.getType("L" + itf + ";"));
-                    }
-                }
+            	for (String itf : serverItfs) {
+            		int ref = TypeReference.CLASS_EXTENDS | nodeOut.interfaces.indexOf(itf) << 8;
+            		nodeOut.visitTypeAnnotation(ref, null, QUILT_SERVER_DESC, false);
+            	}
             }
         
         } else if (!clientItfs.isEmpty() || !serverItfs.isEmpty()) {
