@@ -2,6 +2,7 @@ plugins {
 	id "java"
 	id "java-library"
 	id "maven-publish"
+	id "eclipse"
 	id "net.minecrell.licenser" version "0.4.1"
 }
 
@@ -25,6 +26,7 @@ repositories {
 		url = "https://maven.fabricmc.net/"
 		content {
 			includeGroup("net.fabricmc") // I'd like to deprecate procyon, so we don't need to maintain it
+			includeGroup("cuchaz")
 		}
 	}
 }
